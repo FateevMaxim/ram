@@ -56,6 +56,10 @@ class RegisteredUserController extends Controller
         if (!$isSubstringPresent){
             return redirect()->back()->with('error', 'Неверный код, пожалуйста, перепроверьте');
         }
+        $issetCode = User::query()->where('code', $input)->exists();
+        if ($issetCode){
+            return redirect()->back()->with('error', 'Данный код уже зарегистрирован!');
+        }
 
         $user = User::create([
             'name' => $request->name,
