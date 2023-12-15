@@ -12,6 +12,7 @@
                     <div>
                         <h3 class="mt-0 p-4 text-2xl font-medium leading-tight text-primary">Пункт отправки в другой город</h3>
                     </div>
+
                     <div class="absolute p-4 bottom-0">
                         <span>Количество зарегистрированных трек кодов за сегодня</span>
                         <h3 class="mt-0 text-2xl font-medium leading-tight text-primary">{{ $count }}</h3>
@@ -22,28 +23,34 @@
 
                 </div>
                 <div class="grid hidden" id="clear_track_codes">
-
                 </div>
 
-                <div class="grid grid-cols-1 p-4 min_height round_border relative">
+                <div class="flex flex-col w-full min_height mx-auto p-4 round_border relative">
                     <div class="grid mx-auto">
                         <div id="qrcode"></div>
-                        <b class="mx-auto" style="margin-top: -45px;">Upload Data</b>
                     </div>
-                    <div id="track">
+                    <div class="grid mx-auto pt-4">
+                        <b>Upload Data</b>
+                    </div>
+                    <div class="grid mt-8" id="track">
                         <span>Счётчик</span>
 
                         <div x-data="{ count: 0 }">
                             <h1 id="count"></h1>
                         </div>
                     </div>
-                    <div class="absolute w-full bottom-0 p-4">
+                    <div class="absolute w-full bottom-0 p-4" style="padding-right: 40px;">
                         <form method="POST" action="{{ route('almatyout-product') }}" id="searchForm">
                             <div>
                                 <div>
                                     @csrf
-
-                                    <x-primary-button class="mx-auto w-full">
+                                    <select id="city" name="city" class="block w-full p-2 mb-6 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500" required>
+                                        <option>Выберите город</option>
+                                        @foreach($cities as $city)
+                                            <option value="{{ $city->title }}">{{ $city->title }}</option>
+                                        @endforeach
+                                    </select>
+                                    <x-primary-button class="mx-auto w-full" id="sendTracks">
                                         {{ __('Отправить') }}
                                     </x-primary-button>
                                     <x-secondary-button class="mx-auto mt-4 w-full" id="clear">
@@ -92,10 +99,11 @@
                         /* собираем данные с элементов страницы: */
                         var $form = $( this ),
                             track_codes = $("#clear_track_codes").html();
+                        city = $("#city").val();
                         url = $form.attr( 'action' );
 
                         /* отправляем данные методом POST */
-                        $.post( url, { track_codes: track_codes, send: true } )
+                        $.post( url, { track_codes: track_codes, city: city, send: true } )
                             .done(function( data ) {
                                 location.reload();
                             });
@@ -113,6 +121,27 @@
                         $("#count").text('0');
 
                     });
+
+
+                    $(document).ready(function(){
+                        city = $("#city").val();
+                        if (city === 'Выберите город'){
+                            $("#sendTracks").prop("disabled",true).css("cursor","not-allowed");
+                        }
+                    });
+
+                    /* прикрепить событие submit к форме */
+                    $("#city").change(function(event) {
+
+                        city = $("#city").val();
+                        if (city === 'Выберите город'){
+                            $("#sendTracks").prop("disabled",true).css("cursor","not-allowed");
+                        }else{
+                            $("#sendTracks").prop("disabled",false).css("cursor","pointer");
+                        }
+
+                    });
+
 
                 </script>
             </div>

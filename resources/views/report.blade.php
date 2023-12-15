@@ -70,6 +70,9 @@
                                     <th scope="col" class="px-6 py-3">
                                         Город
                                     </th>
+                                    <th scope="col" class="px-6 py-3">
+                                        Город клиента
+                                    </th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -89,6 +92,9 @@
                                         </td>
                                         <td class="px-6 py-4">
                                             {{ $track->city }}
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            @if(isset($track->user)) {{ $track->user->city }} @endif
                                         </td>
                                     </tr>
                                 @endforeach

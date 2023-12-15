@@ -59,6 +59,7 @@ class UsersExport implements FromCollection, WithHeadings, WithMapping, ShouldAu
             $data->city,
             $data->user->name ?? '',
             $data->user->login ?? '',
+            $data->user->city ?? '',
         ];
     }
     public function columnFormats(): array
@@ -76,6 +77,7 @@ class UsersExport implements FromCollection, WithHeadings, WithMapping, ShouldAu
             'Город',
             'Имя',
             'Телефон',
+            'Город клиента',
         ];
     }
 }
